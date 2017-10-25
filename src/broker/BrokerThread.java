@@ -5,6 +5,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import org.json.JSONException;
+import org.json.JSONObject;
+import servidor.ProtocoloServidor;
+import servidor.proxy.ProxyServidor;
 
 public class BrokerThread extends Thread {
     
@@ -24,18 +28,38 @@ public class BrokerThread extends Thread {
         ) {
 
             String inputLine, outputLine;
-            ProtocoloBroker protocolo = new ProtocoloBroker();
+            ProtocoloServidor protocolo = new ProtocoloServidor();
             outputLine = protocolo.processInput(null);
             out.println(outputLine);
-
-            while ((inputLine = in.readLine()) != null) {
-                //Petición ya procesada se regresa en json, para enviar al cliente.
+            JSONObject json = null;
+            String accion = null;
+            
+            while ((inputLine = in.readLine()) != null) {        
                 outputLine = protocolo.processInput(inputLine);
-                System.out.println("BrokerThread: " + outputLine);
                 out.println(outputLine);
                 
-                if (outputLine.equals("cerrar"))
+                json = new JSONObject(inputLine);
+                accion = (String) json.get("accion");
+                
+                if (outputLine.equals("cerrar")) {
+                    out.println("cerrar");
                     break;
+                } else {
+                    switch (accion) {
+                        case "registrar_servicio":
+                            out.println(registrarServicio(json));
+                            break;
+                        case "registrar_usuario":
+                            out.println(registrarUsuario(json));
+                            break;
+                        case "ejecutar_servicio":
+                            json.remove("accion");
+                            out.println(ejecutarServicio(json));
+                            break;
+                        default:
+                            break;
+                    }              
+                }   
        
             }
 
@@ -43,8 +67,27 @@ public class BrokerThread extends Thread {
             
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (JSONException ex) {
+            System.out.println("Error de JSON ServidorThread.");
         }
 
+    }
+
+    private boolean registrarServicio(JSONObject json) {
+        System.out.println("Usuario registrado correctamente.");
+        return true;
+    }
+
+    private boolean registrarUsuario(JSONObject json) {
+        System.out.println("Usuario registrado correctamente.");
+        return true;
+    }
+
+    private String ejecutarServicio(JSONObject json) throws JSONException {    
+        ProxyServidor proxy = new ProxyServidor();
+        //Realizar validación del accion.
+        System.out.println("Servicio validado.");
+        return proxy.ejecutar(json.toString());
     }
     
 }

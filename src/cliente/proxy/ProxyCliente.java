@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import org.json.JSONException;
@@ -13,10 +14,9 @@ public class ProxyCliente {
     
     public String ejecutar(String peticion) {
         
-        //4443 para Broker servidor.
         String hostName = "localhost";
-        int portNumber = 8080;
-        String respuesta = "";
+        int portNumber = 4443;
+        String respuesta = "cerrar";
         
         try (
                 Socket socket = new Socket(hostName, portNumber);
@@ -24,22 +24,46 @@ public class ProxyCliente {
                 BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         ) {
             
-            String fromBroker;    
+            String fromBroker; 
+            String servicio = null;
             JSONObject fromUser = null;
-                       
+            JSONObject output = new JSONObject();
+            String ip_cliente = String.valueOf(InetAddress.getLocalHost().getHostAddress());
+            
             while ((fromBroker = in.readLine()) != null) {
-                System.out.println("Broker: " + fromBroker);
-
+                
                 if (fromBroker.equals("cerrar"))
                     break;
 
                 if (peticion != null) { 
                     fromUser = new JSONObject(peticion);
                     respuesta = fromBroker;
-
-                    System.out.println("ProxyClient: " + fromUser.toString());
-
-                    out.println(fromUser);
+                    servicio = (String) fromUser.get("servicio");
+                    System.out.println("User: " + fromUser.toString());
+                    System.out.println("Broker: " + respuesta);
+                    
+                    switch (servicio) {
+                        case "votar":
+                            output.put("accion", "ejecutar_servicio");
+                            output.put("servicio", "votar");
+                            output.put("archivo", fromUser.get("archivo"));
+                            output.put("lineaTexto", fromUser.get("lineaTexto"));
+                            out.println(output.toString());
+                            break;
+                        case "contar":
+                            output.put("accion", "ejecutar_servicio");
+                            output.put("servicio", "contar");
+                            output.put("archivo", fromUser.get("archivo"));
+                            out.println(output.toString());
+                            break;
+                        case "registrar":
+                            output.put("accion", "registrar_usuario");
+                            output.put("ip", ip_cliente);
+                            out.println(output.toString());
+                            break;
+                        default:
+                            break;
+                    }                  
                 }
             }
             
@@ -48,7 +72,8 @@ public class ProxyCliente {
             System.exit(1);
         } catch (IOException e) {
             System.err.println("Couldn't get I/O for the connection to " +
-                    hostName);
+                    hostName+ " port " + portNumber);
+            e.printStackTrace();
             System.exit(1);
         } catch (JSONException e) {
             e.printStackTrace();

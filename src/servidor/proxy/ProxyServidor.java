@@ -13,10 +13,9 @@ public class ProxyServidor {
     
     public String ejecutar(String peticion) {
         
-        //4444 para Broker servidor.
         String hostName = "localhost";
         int portNumber = 4444;
-        String respuesta = "";
+        String respuesta = "cerrar";
         
         try (
                 Socket socket = new Socket(hostName, portNumber);
@@ -27,31 +26,30 @@ public class ProxyServidor {
             String fromServer;
             JSONObject fromBroker = null;
             
-            if (peticion != null) 
+            if (peticion != null) {
                 fromBroker = new JSONObject(peticion);
-            
-            while ((fromServer = in.readLine()) != null) {
-                System.out.println("Broker: " + fromServer);
-
-                if (fromServer.equals("cerrar"))
-                    break;
                 
-                if (peticion != null) {
-                    fromBroker = new JSONObject(peticion);
+                while ((fromServer = in.readLine()) != null) {
+                    if (fromServer.equals("cerrar"))
+                        break;
+
                     respuesta = fromServer;
+                    out.println(fromBroker);    
                     
-                    System.out.println("ProxyServidor: " + fromBroker.toString());
-                    
-                    out.println(fromBroker);
+                    System.out.println("Broker: " + fromBroker.toString());
+                    System.out.println("Server: " + respuesta);
                 }
             }
+            
+            
                    
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host " + hostName);
             System.exit(1);
         } catch (IOException e) {
             System.err.println("Couldn't get I/O for the connection to " +
-                    hostName);
+                    hostName + " port " + portNumber);
+            e.printStackTrace();
             System.exit(1);
         } catch (JSONException e) {
             e.printStackTrace();

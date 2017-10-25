@@ -107,7 +107,7 @@ public class ModeloCereal {
             
             proxy.ejecutar(json.toString());
         } catch (JSONException ex) {
-            Logger.getLogger(ModeloCereal.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error de JSON en ModeloCereal.guardaVoto");
         }
                 
     }
@@ -115,10 +115,26 @@ public class ModeloCereal {
     private int leerVotos(String archivo) {
         
         bitacora.guardarRegistro("leerVotos(String archivo)", NOMBRE_CLASE);
+         
+        ProxyCliente proxy = new ProxyCliente();
+        int numeroVotos = 0;
         
-        ManejadorArchivos manejadorArchivo = new ManejadorArchivos(); 
+        try {
+            JSONObject json = new JSONObject();
+            
+            json.put("servicio", "contar");
+            json.put("archivo", archivo);
+            String cadena = proxy.ejecutar(json.toString());            
+                        
+            if (cadena != null) {
+                if (!cadena.equals(""))
+                    numeroVotos = Integer.parseInt(cadena);
+            }            
+        } catch (JSONException ex) {
+            System.out.println("Error de JSON en ModeloCereal.guardaVoto");
+        }
         
-        return manejadorArchivo.leerVotos(archivo);
+        return numeroVotos;
         
     }
     

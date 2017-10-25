@@ -11,7 +11,7 @@ public class ProtocoloBroker {
 
     public String processInput(String theInput) {
 
-        String theOutput = "ProtocoloBroker...";
+        String theOutput = "";
         String servicio = null;
         DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSS");
         String response = dateFormat.format(new Date());
@@ -27,7 +27,7 @@ public class ProtocoloBroker {
                 jsonOutput.put("respuesta", response);
 
                 switch (servicio) {
-                    case "register":
+                    case "registrar":
                         theOutput = registrarUsuario(jsonInput);
                         break;
                     case "cerrar":

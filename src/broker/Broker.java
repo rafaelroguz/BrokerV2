@@ -9,8 +9,7 @@ public class Broker {
         
         System.out.println("~~~~~~BROKER~~~~~~");
         
-        //4443 para Broker servidor.
-        int portNumber = 8080;
+        int portNumber = 4443;
         boolean listening = true;
         
         try (ServerSocket serverSocket = new ServerSocket(portNumber)) { 
