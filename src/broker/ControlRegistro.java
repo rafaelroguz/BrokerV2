@@ -3,7 +3,7 @@ package broker;
 import java.util.ArrayList;
 
 public class ControlRegistro {
-    private String ARCHIVOREGISTRADOS= "registrados.txt";
+    private String ARCHIVOREGISTRADOS= "archivos/registrados.txt";
 
     public ControlRegistro() {
     }
