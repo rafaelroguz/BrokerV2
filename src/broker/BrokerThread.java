@@ -43,7 +43,7 @@ public class BrokerThread extends Thread {
                     
                 switch (accion) {
                     case "registrar_servicio":
-                        new ControlRegistro().registrarCliente((String) json.get("ip"));
+                        //new ControlRegistro().registrarCliente((String) json.get("ip"));
                         System.out.println("Pos... se registró");
                         out.println(registrarServicio(json));
                         break;
@@ -73,12 +73,12 @@ public class BrokerThread extends Thread {
     }
 
     private boolean registrarServicio(JSONObject json) {
-        System.out.println("Usuario registrado correctamente.");
+        System.out.println("Servicio registrado correctamente.");
         return true;
     }
 
     private boolean registrarUsuario(JSONObject json) throws JSONException {
-        new ControlRegistro().registrarCliente((String) json.get("ip"));
+        new ControlRegistro().registrarUsuario((String) json.get("ip"));
         System.out.println("Usuario registrado correctamente.");
         return true;
     }

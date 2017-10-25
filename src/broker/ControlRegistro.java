@@ -1,20 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package broker;
 
 import java.util.ArrayList;
 
-/**
- *
- * @author ARMC3PO
- */
-public class ContolRegistro {
+public class ControlRegistro {
     private String ARCHIVOREGISTRADOS= "registrados.txt";
 
-    public ContolRegistro() {
+    public ControlRegistro() {
     }
     
     public void registrarUsuario(String usuario){
