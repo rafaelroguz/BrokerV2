@@ -40,27 +40,24 @@ public class BrokerThread extends Thread {
                 
                 json = new JSONObject(inputLine);
                 accion = (String) json.get("accion");
+                    
+                switch (accion) {
+                    case "registrar_servicio":
+                        out.println(registrarServicio(json));
+                        break;
+                    case "registrar_usuario":
+                        out.println(registrarUsuario(json));
+                        break;
+                    case "ejecutar_servicio":
+                        json.remove("accion");
+                        out.println(ejecutarServicio(json));
+                        break;
+                    default:
+                        break;
+                }
                 
-                if (outputLine.equals("cerrar")) {
-                    out.println("cerrar");
+                if (outputLine.equals("cerrar"))                  
                     break;
-                } else {
-                    switch (accion) {
-                        case "registrar_servicio":
-                            out.println(registrarServicio(json));
-                            break;
-                        case "registrar_usuario":
-                            out.println(registrarUsuario(json));
-                            break;
-                        case "ejecutar_servicio":
-                            json.remove("accion");
-                            out.println(ejecutarServicio(json));
-                            break;
-                        default:
-                            break;
-                    }              
-                }   
-       
             }
 
             socket.close();

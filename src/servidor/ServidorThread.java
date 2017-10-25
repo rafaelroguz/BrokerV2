@@ -40,21 +40,19 @@ public class ServidorThread extends Thread {
                 json = new JSONObject(inputLine);
                 servicio = (String) json.get("servicio");
                 
-                if (outputLine.equals("cerrar")) {
-                    out.println("cerrar");
-                    break;
-                } else {
-                    switch (servicio) {
-                        case "votar":
-                            out.println(votar(json));
-                            break;
-                        case "contar":
-                            out.println(contar(json));
-                            break;
-                        default:
-                            break;
-                    }              
-                }             
+                switch (servicio) {
+                    case "votar":
+                        out.println(votar(json));
+                        break;
+                    case "contar":
+                        out.println(contar(json));
+                        break;
+                    default:
+                        break;
+                }  
+                
+                if (outputLine.equals("cerrar"))  
+                    break;               
             }
 
             socket.close();
