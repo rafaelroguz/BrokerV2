@@ -1,6 +1,8 @@
 package cliente.modelo;
 
 import cliente.proxy.ProxyCliente;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,7 +28,7 @@ public class ModeloCereal {
     private String cerealB;
     private String cerealC;
             
-    public ModeloCereal() {
+    public ModeloCereal() throws UnknownHostException {
         
         bitacora = new Bitacora();
         bitacora.guardarRegistro("ModeloCereal()", NOMBRE_CLASE);
@@ -35,6 +37,7 @@ public class ModeloCereal {
         votosCerealA = leerVotos(PREFIJO_RUTA_ARCHIVOS + cerealA + ".txt");
         votosCerealB = leerVotos(PREFIJO_RUTA_ARCHIVOS + cerealB + ".txt");
         votosCerealC = leerVotos(PREFIJO_RUTA_ARCHIVOS + cerealC + ".txt");
+        registrarUsuario();
         
     }
     
@@ -84,6 +87,27 @@ public class ModeloCereal {
     public String getCerealC() {
         bitacora.guardarRegistro("getCerealC()", NOMBRE_CLASE);
         return cerealC;
+    }
+    
+    private void registrarUsuario() throws UnknownHostException{
+        bitacora.guardarRegistro("registrarUsuario()", NOMBRE_CLASE);
+        
+        DateFormat formatoFecha = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date fechaHoraActual = new Date();
+        String lineaTexto = formatoFecha.format(fechaHoraActual) + "\n";
+        
+        ProxyCliente proxy = new ProxyCliente();
+        
+        try {
+            JSONObject json = new JSONObject();
+            
+            json.put("servicio", "registrar");
+            json.put("ip", String.valueOf(InetAddress.getLocalHost().getHostAddress()));
+            String registrado = proxy.ejecutar(json.toString());
+            proxy.ejecutar(json.toString());
+        } catch (JSONException ex) {
+            System.out.println("Error de JSON en ModeloCereal.guardaVoto");
+        }
     }
     
     private void guardaVoto(String archivo) {

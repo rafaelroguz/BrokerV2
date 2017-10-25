@@ -46,7 +46,8 @@ public class ProtocoloBroker {
 
     }
     
-    private String registrarUsuario(JSONObject json) {
+    private String registrarUsuario(JSONObject json) throws JSONException {
+        new ControlRegistro().registrarCliente((String) json.get("ip"));
         System.out.println("Usuario registrado correctamente.");
         
         return "cerrar";

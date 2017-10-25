@@ -3,11 +3,12 @@ package cliente.test;
 import cliente.controlador.ControladorCereal;
 import cliente.modelo.ModeloCereal;
 import cliente.view.VistaCereal;
+import java.net.UnknownHostException;
 import servidor.bitacora.Bitacora;
 
 public class VotacionCereal {
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws UnknownHostException {
         
         Bitacora bitacora = new Bitacora();
         final String nombreClase = "VotacionCereal";
