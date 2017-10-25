@@ -28,7 +28,7 @@ public class BrokerThread extends Thread {
         ) {
 
             String inputLine, outputLine;
-            ProtocoloServidor protocolo = new ProtocoloServidor();
+            ProtocoloBroker protocolo = new ProtocoloBroker();
             outputLine = protocolo.processInput(null);
             out.println(outputLine);
             JSONObject json = null;
